@@ -1,0 +1,19 @@
+services:
+  owncloud:
+    container_name: owncloud
+    hostname: owncloud
+    image: owncloud/ocis:latest
+    restart: unless-stopped
+    expose:
+      - 9200
+    env_file:
+      - vars.env
+    volumes:
+     - ./config:/etc/ocis
+     - ./data:/var/lib/ocis
+
+networks:
+  default:
+    external: true
+    name: nginx
+
