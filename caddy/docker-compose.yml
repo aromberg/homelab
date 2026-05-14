@@ -1,0 +1,20 @@
+networks:
+  proxy:
+    external: true
+
+services:
+  caddy:
+    build: .
+    env_file:
+      - /mnt/data/caddy/stack.env
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"  # HTTP/3
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - /mnt/data/caddy/data:/data
+      - /mnt/data/caddy/config:/config
+    networks:
+      - proxy

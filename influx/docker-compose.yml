@@ -1,0 +1,13 @@
+networks:
+  proxy:
+    external: true
+
+services:
+  influxdb:
+    image: docker.io/library/influxdb:2
+    restart: unless-stopped
+    volumes:
+      - /mnt/data/influxdb:/var/lib/influxdb2
+    networks:
+      - default
+      - proxy

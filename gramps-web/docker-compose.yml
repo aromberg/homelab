@@ -1,0 +1,58 @@
+networks:
+  proxy:
+    external: true
+
+services:
+  grampsweb:
+    image: ghcr.io/gramps-project/grampsweb:latest
+    restart: unless-stopped
+    depends_on:
+      - grampsweb_redis
+    environment:
+      GRAMPSWEB_TREE: Gramps Web
+      GRAMPSWEB_CELERY_CONFIG__broker_url: redis://grampsweb_redis:6379/0
+      GRAMPSWEB_CELERY_CONFIG__result_backend: redis://grampsweb_redis:6379/0
+      GRAMPSWEB_RATELIMIT_STORAGE_URI: redis://grampsweb_redis:6379/1
+    volumes:
+      - /mnt/data/grampsweb/users:/app/users
+      - /mnt/data/grampsweb/index:/app/indexdir
+      - /mnt/data/grampsweb/thumb_cache:/app/thumbnail_cache
+      - /mnt/data/grampsweb/cache:/app/cache
+      - /mnt/data/grampsweb/secret:/app/secret
+      - /mnt/data/grampsweb/db:/root/.gramps/grampsdb
+      - /mnt/data/grampsweb/media:/app/media
+      - /mnt/data/grampsweb/tmp:/tmp
+    networks:
+      - default
+      - proxy
+
+  grampsweb_celery:
+    image: ghcr.io/gramps-project/grampsweb:latest
+    restart: unless-stopped
+    depends_on:
+      - grampsweb_redis
+    command:
+      - celery
+      - -A
+      - gramps_webapi.celery
+      - worker
+      - --loglevel=INFO
+      - --concurrency=2
+    environment:
+      GRAMPSWEB_TREE: Gramps Web
+      GRAMPSWEB_CELERY_CONFIG__broker_url: redis://grampsweb_redis:6379/0
+      GRAMPSWEB_CELERY_CONFIG__result_backend: redis://grampsweb_redis:6379/0
+      GRAMPSWEB_RATELIMIT_STORAGE_URI: redis://grampsweb_redis:6379/1
+    volumes:
+      - /mnt/data/grampsweb/users:/app/users
+      - /mnt/data/grampsweb/index:/app/indexdir
+      - /mnt/data/grampsweb/thumb_cache:/app/thumbnail_cache
+      - /mnt/data/grampsweb/cache:/app/cache
+      - /mnt/data/grampsweb/secret:/app/secret
+      - /mnt/data/grampsweb/db:/root/.gramps/grampsdb
+      - /mnt/data/grampsweb/media:/app/media
+      - /mnt/data/grampsweb/tmp:/tmp
+
+  grampsweb_redis:
+    image: docker.io/library/redis:7.2.4-alpine
+    restart: unless-stopped

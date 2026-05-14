@@ -1,0 +1,24 @@
+networks:
+  proxy:
+    external: true
+
+services:
+  ocis:
+    image: owncloud/ocis:latest
+    restart: unless-stopped
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        ocis init || true
+        ocis server
+    environment:
+      OCIS_URL: https://owncloud.home.adrianromberg.com
+      OCIS_INSECURE: "true"
+      PROXY_TLS: "false"
+      PROXY_HTTP_ADDR: 0.0.0.0:9200
+    volumes:
+      - /mnt/data/ocis:/var/lib/ocis
+    networks:
+      - default
+      - proxy

@@ -1,0 +1,118 @@
+networks:
+  proxy:
+    external: true
+
+services:
+  gluetun:
+    image: qmcgaw/gluetun
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    env_file:
+      - /mnt/data/media/stack.env
+    environment:
+      VPN_SERVICE_PROVIDER: airvpn
+      VPN_TYPE: wireguard
+      FIREWALL_VPN_INPUT_PORTS: "42404"
+    ports:
+      - "9696:9696/tcp"   # prowlarr
+      - "7878:7878/tcp"   # radarr
+      - "8989:8989/tcp"   # sonarr
+      - "6767:6767/tcp"   # bazarr
+      - "8080:8080/tcp"   # qbittorrent
+      - "42404:42404/tcp" # torrenting
+      - "42404:42404/udp"
+    networks:
+      - default
+      - proxy
+
+  bazarr:
+    image: lscr.io/linuxserver/bazarr:latest
+    restart: unless-stopped
+    network_mode: service:gluetun
+    depends_on:
+      - gluetun
+    environment:
+      PUID: "1000"
+      PGID: "1000"
+      TZ: Etc/UTC
+    volumes:
+      - /mnt/data/media/config/bazarr:/config
+      - /mnt/data/media/movies:/movies
+      - /mnt/data/media/tv:/tv
+
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    restart: unless-stopped
+    network_mode: service:gluetun
+    depends_on:
+      - gluetun
+    environment:
+      PUID: "1000"
+      PGID: "1000"
+      TZ: Etc/UTC
+    volumes:
+      - /mnt/data/media/config/prowlarr:/config
+
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    restart: unless-stopped
+    network_mode: service:gluetun
+    depends_on:
+      - gluetun
+    environment:
+      PUID: "1000"
+      PGID: "1000"
+      TZ: Etc/UTC
+      WEBUI_PORT: "8080"
+      TORRENTING_PORT: "42404"
+    volumes:
+      - /mnt/data/media/config/qbittorrent:/config
+      - /mnt/data/media/downloads:/downloads
+
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    restart: unless-stopped
+    network_mode: service:gluetun
+    depends_on:
+      - gluetun
+    environment:
+      PUID: "1000"
+      PGID: "1000"
+      TZ: Etc/UTC
+    volumes:
+      - /mnt/data/media/config/radarr:/config
+      - /mnt/data/media/movies:/movies
+      - /mnt/data/media/downloads:/downloads
+
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    restart: unless-stopped
+    network_mode: service:gluetun
+    depends_on:
+      - gluetun
+    environment:
+      PUID: "1000"
+      PGID: "1000"
+      TZ: Etc/UTC
+    volumes:
+      - /mnt/data/media/config/sonarr:/config
+      - /mnt/data/media/tv:/tv
+      - /mnt/data/media/downloads:/downloads
+
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    restart: unless-stopped
+    environment:
+      PUID: "1000"
+      PGID: "1000"
+      TZ: Etc/UTC
+    volumes:
+      - /mnt/data/media/config/jellyfin:/config
+      - /mnt/data/media/movies:/data/movies:ro
+      - /mnt/data/media/tv:/data/tv:ro
+    networks:
+      - default
+      - proxy

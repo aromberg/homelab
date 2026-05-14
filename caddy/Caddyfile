@@ -1,0 +1,58 @@
+(tls_cloudflare) {
+    tls {
+        dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+    }
+}
+
+paperless.home.adrianromberg.com {
+    import tls_cloudflare
+    reverse_proxy webserver:8000
+}
+owncloud.home.adrianromberg.com {
+    import tls_cloudflare
+    reverse_proxy ocis:9200
+}
+famtree.home.adrianromberg.com {
+    import tls_cloudflare
+    reverse_proxy grampsweb:5000
+}
+influx.home.adrianromberg.com {
+    import tls_cloudflare
+    reverse_proxy influxdb:8086
+}
+grafana.home.adrianromberg.com {
+    import tls_cloudflare
+    reverse_proxy grafana:3000
+}
+radarr.home.adrianromberg.com {
+    import tls_cloudflare
+    reverse_proxy gluetun:7878
+}
+
+sonarr.home.adrianromberg.com {
+    import tls_cloudflare
+    reverse_proxy gluetun:8989
+}
+
+prowlarr.home.adrianromberg.com {
+    import tls_cloudflare
+    reverse_proxy gluetun:9696
+}
+
+bazarr.home.adrianromberg.com {
+    import tls_cloudflare
+    reverse_proxy gluetun:6767
+}
+
+qbit.home.adrianromberg.com {
+    import tls_cloudflare
+    reverse_proxy gluetun:8080
+}
+jellyfin.home.adrianromberg.com {
+    import tls_cloudflare
+    reverse_proxy jellyfin:8096
+}
+router.home.adrianromberg.com {
+    import tls_cloudflare
+    reverse_proxy 192.168.0.1:80
+}

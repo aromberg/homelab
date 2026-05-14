@@ -1,0 +1,18 @@
+networks:
+  proxy:
+    external: true
+
+services:
+  grafana:
+    image: docker.io/grafana/grafana:latest
+    restart: unless-stopped
+    environment:
+      GF_SERVER_DOMAIN: grafana.home.adrianromberg.com
+      GF_SERVER_ENFORCE_DOMAIN: "true"
+      GF_SERVER_ENABLE_GZIP: "true"
+      GF_ANALYTICS_REPORTING_ENABLED: "false"
+    volumes:
+      - /mnt/data/grafana:/var/lib/grafana
+    networks:
+      - default
+      - proxy
