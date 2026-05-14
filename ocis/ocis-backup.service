@@ -1,0 +1,9 @@
+[Unit]
+Description=ownCloud Infinite Scale restic backup
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/opt/homelab/ocis/backup.sh
+User=root
