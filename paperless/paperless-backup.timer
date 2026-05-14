@@ -1,0 +1,10 @@
+[Unit]
+Description=Paperless-ngx restic backup timer
+
+[Timer]
+OnCalendar=daily
+Persistent=true
+RandomizedDelaySec=1h
+
+[Install]
+WantedBy=timers.target
