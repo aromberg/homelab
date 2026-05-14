@@ -1,0 +1,8 @@
+services:
+  macrofactor-influx:
+    image: ghcr.io/aromberg/macrofactor-influx:latest
+    restart: unless-stopped
+    env_file:
+      - /mnt/data/macrofactor-influx/stack.env
+    volumes:
+      - /mnt/data/macrofactor-influx/config:/root/.macrofactor-influx
