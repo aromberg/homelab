@@ -19,6 +19,7 @@ Self-hosted services running on Docker Compose, reverse-proxied by Caddy with Cl
 | Bazarr | `bazarr.home.adrianromberg.com` | Subtitle management |
 | qBittorrent | `qbit.home.adrianromberg.com` | Torrent client (via Gluetun VPN) |
 | macrofactor-influx | — | Syncs MacroFactor data to InfluxDB |
+| oura-sync | - | Syncs Oura data to InfluxDB |
 
 ## Backups
 

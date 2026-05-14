@@ -17,8 +17,20 @@ services:
       OCIS_INSECURE: "true"
       PROXY_TLS: "false"
       PROXY_HTTP_ADDR: 0.0.0.0:9200
+      SEARCH_EXTRACTOR_TYPE: basic
+      NATS_NATS_HOST: 0.0.0.0
+      NATS_NATS_PORT: "9233"
+      STORAGE_USERS_EVENTS_NUM_CONSUMERS: "1"
+      SEARCH_EVENTS_NUM_CONSUMERS: "1"
+      THUMBNAILS_NUM_CONSUMERS: "1"
+      AUDIT_EVENTS_NUM_CONSUMERS: "1"
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
     volumes:
       - /mnt/data/ocis:/var/lib/ocis
+      - /mnt/data/ocis/config:/etc/ocis
     networks:
       - default
       - proxy

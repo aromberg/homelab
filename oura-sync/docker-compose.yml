@@ -1,0 +1,6 @@
+services:
+  oura-sync:
+    image: ghcr.io/v3xlabs/oura-sync:sha-498a2ed
+    restart: unless-stopped
+    env_file:
+      - /mnt/data/oura-sync/stack.env
