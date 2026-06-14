@@ -1,6 +1,8 @@
 networks:
   proxy:
     external: true
+  cloudflared:
+    external: true
 
 services:
   grampsweb:
@@ -25,6 +27,7 @@ services:
     networks:
       - default
       - proxy
+      - cloudflared
 
   grampsweb_celery:
     image: ghcr.io/gramps-project/grampsweb:latest

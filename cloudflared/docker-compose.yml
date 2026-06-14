@@ -1,0 +1,16 @@
+networks:
+  cloudflared:
+    external: true
+
+services:
+  cloudflared:
+    image: docker.io/cloudflare/cloudflared:latest
+    restart: unless-stopped
+    env_file:
+      - /mnt/data/cloudflared/stack.env
+    command:
+      - tunnel
+      - --no-autoupdate
+      - run
+    networks:
+      - cloudflared

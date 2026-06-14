@@ -1,12 +1,14 @@
 # Homelab
 
 Self-hosted services running on Docker Compose, reverse-proxied by Caddy with Cloudflare DNS-01 TLS.
+Selected services can also be exposed through Cloudflare Tunnel with `cloudflared` on a separate Docker network.
 
 ## Services
 
 | Service | URL | Purpose |
 |---------|-----|---------|
 | Caddy | — | Reverse proxy + automatic TLS via Cloudflare |
+| cloudflared | — | Cloudflare Tunnel for selected public services |
 | Paperless-ngx | `paperless.home.adrianromberg.com` | Document management |
 | ownCloud Infinite Scale | `owncloud.home.adrianromberg.com` | Cloud storage |
 | Gramps Web | `famtree.home.adrianromberg.com` | Family tree |
@@ -24,3 +26,4 @@ Self-hosted services running on Docker Compose, reverse-proxied by Caddy with Cl
 ## Backups
 
 Paperless and OCIS have systemd timer-based backup scripts (`backup.sh` + `.service`/`.timer`).
+InfluxDB
