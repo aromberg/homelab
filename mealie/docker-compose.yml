@@ -1,0 +1,37 @@
+networks:
+  proxy:
+    external: true
+  default: {}
+
+services:
+  db:
+    image: docker.io/library/postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: mealie
+      POSTGRES_USER: mealie
+    env_file:
+      - /mnt/data/mealie/stack.env
+    volumes:
+      - /mnt/data/mealie/postgres:/var/lib/postgresql/data
+
+  mealie:
+    image: ghcr.io/mealie-recipes/mealie:latest
+    restart: unless-stopped
+    depends_on:
+      - db
+    volumes:
+      - /mnt/data/mealie/data:/app/data
+    environment:
+      DB_ENGINE: postgres
+      POSTGRES_USER: mealie
+      POSTGRES_SERVER: db
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: mealie
+      BASE_URL: https://mealie.home.adrianromberg.com
+      ALLOW_SIGNUP: "false"
+    env_file:
+      - /mnt/data/mealie/stack.env
+    networks:
+      - default
+      - proxy
